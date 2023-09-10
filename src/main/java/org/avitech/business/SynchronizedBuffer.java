@@ -19,14 +19,13 @@ public class SynchronizedBuffer<T> implements Buffer<T> {
   // conditions to control reading and writing
   private final Condition canWrite = accessLock.newCondition();
   private final Condition canRead = accessLock.newCondition();
-
   private final Queue<T> queue = new LinkedList<>(); // shared by producer and consumer threads
 
   @Override
   public void blockingPut(final T command) {
-    accessLock.lock();
-
     try {
+      accessLock.lock();
+
       while (queue.size() >= ARBITRARY_BUFFER_LIMIT) {
         canWrite.await(); // wait until buffer is empty
       }
@@ -35,19 +34,21 @@ public class SynchronizedBuffer<T> implements Buffer<T> {
 
       // signal any threads waiting to read from buffer
       canRead.signalAll();
+
+      return;
     } catch (InterruptedException e) {
       LOGGER.error("An error occurred when trying to put a command to queue");
-      throw new AvitechException("An exception thrown on probably the canWrite object", e);
     } finally {
       accessLock.unlock();
     }
+    throw new AvitechException("An exception thrown in blockingPut method");
   }
 
   @Override
   public T blockingGet() {
-    accessLock.lock();
-
     try {
+      accessLock.lock();
+
       // if there is no data to read, place thread in waiting state
       while (queue.isEmpty()) {
         canRead.await(); // wait until buffer is not empty
@@ -61,10 +62,10 @@ public class SynchronizedBuffer<T> implements Buffer<T> {
       return command;
     } catch (InterruptedException e) {
       LOGGER.error("An error occurred when trying to get a command from queue");
-      throw new AvitechException("An exception thrown on probably the canRead object", e);
     } finally {
       accessLock.unlock();
     }
+    throw new AvitechException("An exception thrown blockingGet method");
   }
 
   public Queue<T> getQueue() {
