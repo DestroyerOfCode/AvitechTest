@@ -1,6 +1,7 @@
 package org.avitech.business;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import org.avitech.models.command.Command;
@@ -84,6 +85,7 @@ public class SynchronizedBufferTest {
     // then
     assertEquals(5, buffer.getQueue().size()); // Buffer size should be capped at 10
   }
+
   @Test
   public void shouldHave() throws InterruptedException {
     // given

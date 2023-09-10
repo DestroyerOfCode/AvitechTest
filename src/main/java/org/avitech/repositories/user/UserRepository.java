@@ -32,6 +32,26 @@ public class UserRepository {
     this.db = db;
   }
 
+  private static Map<String, String> getDbConfigFromYaml() {
+    try (FileInputStream fis = new FileInputStream("./src/main/resources/dbConfig.yaml")) {
+      Yaml yaml = new Yaml();
+
+      return yaml.load(fis);
+    } catch (IOException e) {
+      LOGGER.error("An error occurred when opening the file with DB configs", e);
+    }
+
+    throw new AvitechException(
+        "An error occurred opening the file dbConfig with config to Avitech db");
+  }
+
+  private static void prepareParamsForStatement(PreparedStatement select, User user)
+      throws SQLException {
+    select.setInt(1, user.id());
+    select.setString(2, user.guid());
+    select.setString(3, user.name());
+  }
+
   public final void deleteUsers(final List<String> params) {
     try {
       PreparedStatement select = db.getConnection().prepareStatement(DELETE_ALL_USERS);
@@ -96,25 +116,5 @@ public class UserRepository {
     }
 
     throw new AvitechException();
-  }
-
-  private static Map<String, String> getDbConfigFromYaml() {
-    try (FileInputStream fis = new FileInputStream("./src/main/resources/dbConfig.yaml")) {
-      Yaml yaml = new Yaml();
-
-      return yaml.load(fis);
-    } catch (IOException e) {
-      LOGGER.error("An error occurred when opening the file with DB configs", e);
-    }
-
-    throw new AvitechException(
-        "An error occurred opening the file dbConfig with config to Avitech db");
-  }
-
-  private static void prepareParamsForStatement(PreparedStatement select, User user)
-      throws SQLException {
-    select.setInt(1, user.id());
-    select.setString(2, user.guid());
-    select.setString(3, user.name());
   }
 }
