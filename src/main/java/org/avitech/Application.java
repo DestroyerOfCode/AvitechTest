@@ -35,12 +35,6 @@ public class Application {
     startThreads(putThread, getThread);
   }
 
-  private void registerCommandActions() {
-    registerAction(ADD, userRepository::addUser);
-    registerAction(PRINT_ALL, userRepository::printUsers);
-    registerAction(DELETE_ALL, userRepository::deleteUsers);
-  }
-
   private static void startThreads(final Thread putThread, final Thread getThread) {
     try {
       putThread.start();
@@ -76,5 +70,11 @@ public class Application {
       buffer.blockingPut(create(DELETE_ALL));
       buffer.blockingPut(create(PRINT_ALL));
     };
+  }
+
+  private void registerCommandActions() {
+    registerAction(ADD, userRepository::addUser);
+    registerAction(PRINT_ALL, userRepository::printUsers);
+    registerAction(DELETE_ALL, userRepository::deleteUsers);
   }
 }
