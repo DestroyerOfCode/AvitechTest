@@ -9,9 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AvitechDatabase implements AutoCloseable {
-
   private static final Logger LOGGER = LoggerFactory.getLogger(AvitechDatabase.class);
-
   private final String url;
   private final Connection dbConnection;
 

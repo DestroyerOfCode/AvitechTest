@@ -1,24 +1,32 @@
 package org.avitech.models.command;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class Command {
 
+  private static final Map<CommandType, Consumer<List<String>>> actionMap = new HashMap<>();
+
   private final CommandType commandType;
   private final List<String> params;
-  private final Consumer<List<String>> action;
 
-  public Command(
-      final CommandType commandType,
-      final Consumer<List<String>> action,
-      final List<String> params) {
+  public static void registerAction(final CommandType type, final Consumer<List<String>> action) {
+    actionMap.put(type, action);
+  }
+
+  public Command(final CommandType commandType, final List<String> params) {
     this.commandType = commandType;
-    this.action = action;
     this.params = params;
   }
 
   public void execute() {
+    Consumer<List<String>> action = actionMap.get(commandType);
+    if (Objects.isNull(action)) {
+      throw new UnsupportedOperationException("Unsupported command: " + commandType);
+    }
     action.accept(params);
   }
 
@@ -34,7 +42,6 @@ public class Command {
 
     private CommandType type;
     private List<String> params = List.of();
-    private Consumer<List<String>> action;
 
     public Builder withType(final CommandType type) {
       this.type = type;
@@ -46,13 +53,8 @@ public class Command {
       return this;
     }
 
-    public Builder withAction(final Consumer<List<String>> action) {
-      this.action = action;
-      return this;
-    }
-
     public Command build() {
-      return new Command(type, action, params);
+      return new Command(type, params);
     }
   }
 }

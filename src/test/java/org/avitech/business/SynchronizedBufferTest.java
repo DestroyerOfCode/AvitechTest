@@ -1,12 +1,14 @@
 package org.avitech.business;
 
+import static org.avitech.models.command.CommandFactory.create;
+import static org.avitech.models.command.CommandType.ADD;
+import static org.avitech.models.command.CommandType.DELETE_ALL;
+import static org.avitech.models.command.CommandType.PRINT_ALL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import org.avitech.models.command.Command;
-import org.avitech.models.command.CommandFactory;
-import org.avitech.models.command.CommandType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,9 +28,7 @@ public class SynchronizedBufferTest {
         new Thread(
             () -> {
               for (int i = 1; i <= 5; i++) {
-                buffer.blockingPut(
-                    CommandFactory.create(
-                        CommandType.ADD, System.out::println, List.of("Systems functional")));
+                buffer.blockingPut(create(ADD, List.of("Systems functional")));
               }
             });
 
@@ -37,7 +37,7 @@ public class SynchronizedBufferTest {
             () -> {
               for (int i = 1; i <= 5; i++) {
                 Command command = buffer.blockingGet();
-                assertEquals(command.getCommandType(), CommandType.ADD);
+                assertEquals(command.getCommandType(), ADD);
                 assertEquals("Systems functional", command.getParams().get(0));
               }
             });
@@ -60,8 +60,7 @@ public class SynchronizedBufferTest {
         new Thread(
             () -> {
               for (int i = 1; i <= 15; i++) {
-                buffer.blockingPut(
-                    CommandFactory.create(CommandType.PRINT_ALL, System.out::println));
+                buffer.blockingPut(create(PRINT_ALL));
               }
             });
 
@@ -70,7 +69,7 @@ public class SynchronizedBufferTest {
             () -> {
               for (int i = 1; i <= 10; i++) {
                 Command command = buffer.blockingGet();
-                assertEquals(CommandType.PRINT_ALL, command.getCommandType());
+                assertEquals(PRINT_ALL, command.getCommandType());
                 assertTrue(command.getParams().isEmpty());
               }
             });
@@ -93,8 +92,7 @@ public class SynchronizedBufferTest {
         new Thread(
             () -> {
               for (int i = 1; i <= 10; i++) {
-                buffer.blockingPut(
-                    CommandFactory.create(CommandType.PRINT_ALL, System.out::println));
+                buffer.blockingPut(create(DELETE_ALL));
               }
             });
 
@@ -103,7 +101,7 @@ public class SynchronizedBufferTest {
             () -> {
               for (int i = 1; i <= 15; i++) {
                 Command command = buffer.blockingGet();
-                assertEquals(CommandType.PRINT_ALL, command.getCommandType());
+                assertEquals(DELETE_ALL, command.getCommandType());
                 assertTrue(command.getParams().isEmpty());
               }
             });
