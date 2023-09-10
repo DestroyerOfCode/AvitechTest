@@ -87,7 +87,7 @@ public class SynchronizedBufferTest {
   }
 
   @Test
-  public void shouldHave() throws InterruptedException {
+  public void shouldLeaveTheConsumerThreadHanging_WhenQueueEmpty() throws InterruptedException {
     // given
     Thread producer =
         new Thread(
