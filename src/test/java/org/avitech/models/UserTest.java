@@ -2,6 +2,7 @@ package org.avitech.models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.avitech.models.user.User;
 import org.junit.jupiter.api.Test;
 
 class UserTest {

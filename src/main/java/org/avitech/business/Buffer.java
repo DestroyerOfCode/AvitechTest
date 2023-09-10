@@ -1,10 +1,8 @@
 package org.avitech.business;
 
-import org.avitech.models.Command;
+public interface Buffer<T> {
 
-public interface Buffer {
+  void blockingPut(final T value);
 
-  void blockingPut(final Command value);
-
-  void blockingGet();
+  T blockingGet();
 }

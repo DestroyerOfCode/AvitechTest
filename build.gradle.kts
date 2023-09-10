@@ -1,3 +1,4 @@
+
 plugins {
     id("java")
 }
@@ -32,4 +33,14 @@ java {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+task("run") {
+    dependsOn("classes")
+    doLast {
+        javaexec {
+            classpath(sourceSets.main.get().runtimeClasspath)
+            mainClass.set("org.avitech.Main")
+        }
+    }
 }

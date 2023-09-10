@@ -1,4 +1,4 @@
-package org.avitech.models;
+package org.avitech.models.command;
 
 public enum CommandType {
   ADD,

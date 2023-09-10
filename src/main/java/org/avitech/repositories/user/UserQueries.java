@@ -1,6 +1,6 @@
-package org.avitech.repositories;
+package org.avitech.repositories.user;
 
-public class Queries {
+public class UserQueries {
 
   public static final String SELECT_ALL_USERS = "SELECT * FROM avitech.SUSERS;";
   public static final String DELETE_ALL_USERS = "DELETE FROM avitech.SUSERS;";

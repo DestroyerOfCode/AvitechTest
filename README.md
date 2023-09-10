@@ -1,0 +1,1 @@
+<p>To start the app, use java 17 and use the the task <b>./gradlew clean build run</b></p>

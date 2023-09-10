@@ -1,8 +1,8 @@
-package org.avitech.repositories;
+package org.avitech.repositories.user;
 
-import static org.avitech.repositories.Queries.ADD_USER;
-import static org.avitech.repositories.Queries.DELETE_ALL_USERS;
-import static org.avitech.repositories.Queries.SELECT_ALL_USERS;
+import static org.avitech.repositories.user.UserQueries.ADD_USER;
+import static org.avitech.repositories.user.UserQueries.DELETE_ALL_USERS;
+import static org.avitech.repositories.user.UserQueries.SELECT_ALL_USERS;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,7 +12,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import org.avitech.exceptions.AvitechException;
-import org.avitech.models.User;
+import org.avitech.models.user.User;
+import org.avitech.repositories.AvitechDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
