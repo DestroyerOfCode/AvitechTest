@@ -20,7 +20,6 @@ dependencies {
     implementation(libs.h2database.h2)
     implementation(libs.yaml.snakeyaml)
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockito)
 }
