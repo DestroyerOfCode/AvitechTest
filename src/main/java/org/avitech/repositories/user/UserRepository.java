@@ -28,13 +28,13 @@ public class UserRepository {
     this.db = establishConnection();
   }
 
-  public UserRepository(AvitechDatabase db) {
+  public UserRepository(final AvitechDatabase db) {
     this.db = db;
   }
 
   private static Map<String, String> getDbConfigFromYaml() {
     try (FileInputStream fis = new FileInputStream("./src/main/resources/dbConfig.yaml")) {
-      Yaml yaml = new Yaml();
+      final Yaml yaml = new Yaml();
 
       return yaml.load(fis);
     } catch (IOException e) {
@@ -45,7 +45,7 @@ public class UserRepository {
         "An error occurred opening the file dbConfig with config to Avitech db");
   }
 
-  private static void prepareParamsForStatement(PreparedStatement select, User user)
+  private static void prepareParamsForStatement(final PreparedStatement select, final User user)
       throws SQLException {
     select.setInt(1, user.id());
     select.setString(2, user.guid());
@@ -54,7 +54,7 @@ public class UserRepository {
 
   public final void deleteUsers(final List<String> params) {
     try {
-      PreparedStatement select = db.getConnection().prepareStatement(DELETE_ALL_USERS);
+      final PreparedStatement select = db.getConnection().prepareStatement(DELETE_ALL_USERS);
 
       select.execute();
       return;
@@ -67,7 +67,7 @@ public class UserRepository {
 
   public final void addUser(final List<String> params) {
     try {
-      PreparedStatement select = db.getConnection().prepareStatement(ADD_USER);
+      final PreparedStatement select = db.getConnection().prepareStatement(ADD_USER);
       final User user = new User(Integer.parseInt(params.get(0)), params.get(1), params.get(2));
 
       prepareParamsForStatement(select, user);
@@ -88,9 +88,9 @@ public class UserRepository {
 
   public final void printUsers(final List<String> params) {
     try {
-      PreparedStatement select = db.getConnection().prepareStatement(SELECT_ALL_USERS);
+      final PreparedStatement select = db.getConnection().prepareStatement(SELECT_ALL_USERS);
 
-      ResultSet resultSet = select.executeQuery();
+      final ResultSet resultSet = select.executeQuery();
 
       while (resultSet.next()) {
         System.out.println(resultSet.getInt("USER_ID"));
@@ -106,9 +106,13 @@ public class UserRepository {
     throw new AvitechException("An error occurred when trying to print users");
   }
 
-  private AvitechDatabase establishConnection() {
+  public final void closeConnection() {
+    db.close();
+  }
 
+  private AvitechDatabase establishConnection() {
     final Map<String, String> config = getDbConfigFromYaml();
+
     try {
       return new AvitechDatabase(config.get("url"), config.get("username"), config.get("password"));
     } catch (AvitechException e) {
