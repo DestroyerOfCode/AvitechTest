@@ -33,6 +33,8 @@ public class Application {
     final Thread getThread = new Thread(getThreadRunnable(buffer));
 
     startThreads(putThread, getThread);
+
+    userRepository.closeConnection();
   }
 
   private static void startThreads(final Thread putThread, final Thread getThread) {
