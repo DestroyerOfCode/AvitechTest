@@ -43,7 +43,7 @@ public class AvitechDatabase implements AutoCloseable {
   @Override
   public void close() {
     try {
-      if (Objects.nonNull(dbConnection) && dbConnection.isClosed()) {
+      if (Objects.isNull(dbConnection) || dbConnection.isClosed()) {
         LOGGER.info(String.format("Connection to %s is already closed or was never open.", url));
         return;
       }
@@ -52,7 +52,7 @@ public class AvitechDatabase implements AutoCloseable {
     } catch (SQLException e) {
       LOGGER.error(
           String.format("An SQL error occurred when trying to close connection to %s", url), e);
-      throw new AvitechException(e.getMessage());
     }
+    throw new AvitechException("An error occurred when closing database connection");
   }
 }
